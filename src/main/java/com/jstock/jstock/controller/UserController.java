@@ -1,4 +1,4 @@
-package com.jstock.jstock.constants.controller;
+package com.jstock.jstock.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

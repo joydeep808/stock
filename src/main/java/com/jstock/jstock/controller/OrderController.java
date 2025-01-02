@@ -1,4 +1,4 @@
-package com.jstock.jstock.constants.controller;
+package com.jstock.jstock.controller;
 
 import java.util.List;
 

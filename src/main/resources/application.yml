@@ -2,9 +2,9 @@ spring:
   application:
     name : prediction
   datasource:
-    url: 
-    username: 
-    password: 
+    url: jdbc:postgresql://localhost:5432/stock
+    username: Joydeep122
+    password: Joydeep122
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,9 +17,9 @@ spring:
     password: guest
   data:
     redis:
-      host: 
-      port: 
-      password: 
+      host: caching-d9f396d-myweblaw-fa42.k.aivencloud.com
+      port: 22791
+      password: AVNS_ZCti4cJb34zC6qCcVyF
 server:
   port: 3005
 jwt:

@@ -14,7 +14,6 @@ import com.jstock.jstock.constants.Constant.OrderType;
 import com.jstock.jstock.dto.order.*;
 import com.jstock.jstock.dto.user.UserBalanceDto;
 import com.jstock.jstock.entity.Order;
-import com.jstock.jstock.entity.Order.*;
 import com.jstock.jstock.entity.UserBalanceTransaction.TransactionType;
 import com.jstock.jstock.entity.Trade;
 import com.jstock.jstock.entity.UserBalanceTransaction;
@@ -177,7 +176,7 @@ public class OrderService {
         }
         // Send the order to the message queue
         try {
-          messageSender.send(RabbitMqConfig.ORDER_QUEUE, order);
+          messageSender.send(Constant.ORDER_QUEUE, order);
           // log.info("Order sent to message queue successfully");
         } catch (Exception e) {
           // log.error("Failed to send order to message queue", e);
@@ -239,7 +238,7 @@ public class OrderService {
 
       // Send the trade to the message queue
       try {
-        messageSender.send(RabbitMqConfig.TRADE_QUEUE, trade);
+        messageSender.send(Constant.TRADE_QUEUE, trade);
         // log.info("Trade sent to message queue successfully");
       } catch (Exception e) {
         // log.error("Failed to send trade to message queue", e);
@@ -256,7 +255,7 @@ public class OrderService {
         order.setFilledQuantity(quantity);
         try {
           // Send a full success notification to the message queue
-          messageSender.send(RabbitMqConfig.FULL_TRADE_SUCCESS_QUEUE, order);
+          messageSender.send(Constant.FULL_TRADE_SUCCESS_QUEUE, order);
           // log.info("Full success notification sent for order: {}", order.getId());
         } catch (Exception e) {
           // log.error("Failed to send full success notification", e);
@@ -267,7 +266,7 @@ public class OrderService {
         order.setFilledQuantity(quantity - remainingQuantity);
         try {
           // Send a partial success notification to the message queue
-          messageSender.send(RabbitMqConfig.PARTIAL_TRADE_QUEUE, order);
+          messageSender.send(Constant.PARTIAL_TRADE_QUEUE, order);
           // log.info("Partial success notification sent for order: {}", order.getId());
         } catch (Exception e) {
           // log.error("Failed to send partial success notification", e);
@@ -349,7 +348,7 @@ public class OrderService {
 
     // Send the order to the message queue
     try {
-      messageSender.send(RabbitMqConfig.ORDER_QUEUE, order);
+      messageSender.send(Constant.ORDER_QUEUE, order);
       // log.info("Order sent to message queue successfully");
     } catch (Exception e) {
       // If there is an error sending the order to the message queue, log the error
@@ -419,7 +418,7 @@ public class OrderService {
           order.setStatus(OrderStatus.PARTIALLY_FILLED);
           order.setFilledQuantity(request.getQuantity() - remainingQuantity);
           try {
-            messageSender.send(RabbitMqConfig.PARTIAL_TRADE_QUEUE, order);
+            messageSender.send(Constant.PARTIAL_TRADE_QUEUE, order);
             // log.info("Partial success notification sent for order: {}", order.getId());
           } catch (Exception e) {
             // log.error("Failed to send partial success notification", e);
@@ -440,7 +439,7 @@ public class OrderService {
 
       // Send the trade to the message queue
       try {
-        messageSender.send(RabbitMqConfig.TRADE_QUEUE, trade);
+        messageSender.send(Constant.TRADE_QUEUE, trade);
         // log.info("Trade sent to message queue successfully");
       } catch (Exception e) {
         // log.error("Failed to send trade to message queue", e);
@@ -557,7 +556,7 @@ public class OrderService {
 
     if (type.equals(Constant.BID)) { // Check if the transaction type is BID
       try {
-        messageSender.send(RabbitMqConfig.USER_BALANCE_QUEUE,
+        messageSender.send(Constant.USER_BALANCE_QUEUE,
             new UserBalanceTransaction(bidder, totalPrice, TransactionType.BID, false, symbol)); // Send balance
                                                                                                  // transaction to queue
         // log.info("Successfully sent balance transaction to queue"); // Log successful
@@ -602,7 +601,7 @@ public class OrderService {
       reverseOrderQuantity(userId, cencelOrder);
       // Send the order ID to the message queue to notify the order service to
       // cancel the order
-      messageSender.send(RabbitMqConfig.ORDER_QUEUE, orderId);
+      messageSender.send(Constant.ORDER_QUEUE, orderId);
       // Return a success response with a 200 status code
       return Response.sendSuccessResponse("Order cancelled successfully if there");
     } catch (Exception e) {
@@ -643,14 +642,14 @@ public class OrderService {
     if (cencelOrder.getSide().equals(Constant.ASKS)) {
       // If the order side is an ask, add the quantity to the user's balance for the
       // given symbol
-      messageSender.send(RabbitMqConfig.USER_BALANCE_QUEUE,
+      messageSender.send(Constant.USER_BALANCE_QUEUE,
           new UserBalanceTransaction(userId, quantity, TransactionType.ASKS, true, symbol));
       Double currentBalance = userBalance.getBalances().getOrDefault(symbol, 0.0);
       userBalance.getBalances().put(symbol, currentBalance + quantity);
     } else {
       // If the order side is a bid, add the quantity to the user's balance for the
       // INR symbol
-      messageSender.send(RabbitMqConfig.USER_BALANCE_QUEUE,
+      messageSender.send(Constant.USER_BALANCE_QUEUE,
           new UserBalanceTransaction(userId, quantity, TransactionType.ASKS, true, Constant.INR));
       Double currentBalance = userBalance.getBalances().getOrDefault(Constant.INR, 0.0);
       userBalance.getBalances().put(Constant.INR, currentBalance + quantity);

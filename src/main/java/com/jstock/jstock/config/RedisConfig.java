@@ -1,6 +1,5 @@
 package com.jstock.jstock.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,21 +19,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-  @Value("${spring.redis.host}")
-  private String host;
-
-  @Value("${spring.redis.port}")
-  private int port;
-
-  @Value("${spring.redis.password}")
-  private String password;
-
   @Bean
   public RedisConnectionFactory redisConnectionFactory() {
     RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-    configuration.setHostName(host);
-    configuration.setPort(port);
-    configuration.setPassword(password);
+    configuration.setHostName("caching-d9f396d-myweblaw-fa42.k.aivencloud.com");
+    configuration.setPort(22791);
+    configuration.setPassword("AVNS_ZCti4cJb34zC6qCcVyF");
     return new LettuceConnectionFactory(configuration);
 
   }

@@ -4,11 +4,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jstock.jstock.constants.Constant;
 import com.jstock.jstock.constants.Constant.OrderStatus;
 import com.jstock.jstock.entity.Order;
 import com.jstock.jstock.entity.Trade;
 import com.jstock.jstock.entity.UserBalanceTransaction;
-import com.jstock.jstock.rabbitmq.RabbitMqConfig;
 import com.jstock.jstock.repository.OrderRepo;
 import com.jstock.jstock.repository.TradeRepo;
 import com.jstock.jstock.repository.UserBalanceTransactionRepo;
@@ -28,7 +28,7 @@ public class OrderListners {
   private final UserBalanceTransactionRepo transactionRepo;
   private final StockService stockService;
 
-  @RabbitListener(queues = RabbitMqConfig.ORDER_QUEUE)
+  @RabbitListener(queues = Constant.ORDER_QUEUE)
   public void handleOrder(String message) {
     try {
       Order wantsToSaveTheOrder = objectMapper.readValue(message, Order.class);
@@ -40,7 +40,7 @@ public class OrderListners {
     }
   }
 
-  @RabbitListener(queues = RabbitMqConfig.TRADE_QUEUE)
+  @RabbitListener(queues = Constant.TRADE_QUEUE)
   public void handleTrade(String message) {
     try {
       Trade trade = objectMapper.readValue(message, Trade.class);
@@ -51,7 +51,7 @@ public class OrderListners {
     }
   }
 
-  @RabbitListener(queues = RabbitMqConfig.USER_BALANCE_QUEUE)
+  @RabbitListener(queues = Constant.USER_BALANCE_QUEUE)
   public void handleBalanceHistory(String message) {
     try {
       UserBalanceTransaction transaction = objectMapper.readValue(message, UserBalanceTransaction.class);
@@ -63,7 +63,7 @@ public class OrderListners {
 
   }
 
-  @RabbitListener(queues = RabbitMqConfig.PARTIAL_TRADE_QUEUE)
+  @RabbitListener(queues = Constant.PARTIAL_TRADE_QUEUE)
   public void handlePartialOrder(String message) {
     try {
       Order order = objectMapper.readValue(message, Order.class);
@@ -78,7 +78,7 @@ public class OrderListners {
     }
   }
 
-  @RabbitListener(queues = RabbitMqConfig.FULL_TRADE_SUCCESS_QUEUE)
+  @RabbitListener(queues = Constant.FULL_TRADE_SUCCESS_QUEUE)
   public void handleFullOrder(String message) {
     try {
       Order order = objectMapper.readValue(message, Order.class);
