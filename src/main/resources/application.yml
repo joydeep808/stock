@@ -1,0 +1,41 @@
+spring:
+  application:
+    name : prediction
+  datasource:
+    url: 
+    username: 
+    password: 
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      # dialect: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  data:
+    redis:
+      host: 
+      port: 
+      password: 
+server:
+  port: 3005
+jwt:
+  secret: ${JWT_PASSWORD}
+token:
+  accessTokenExpiry: 900000
+  refreshTokenExpiry: 5184000000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info, env
+        base-path: /actuator
+  health:
+    show-details: always  # Show health details on /actuator/health
+  metrics:
+    enable:
+      all: true
