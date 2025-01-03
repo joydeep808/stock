@@ -3,10 +3,10 @@ package com.jstock.jstock.service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.jstock.jstock.constants.Constant;
 import com.jstock.jstock.dto.order.CencelOrderDto;
@@ -21,8 +21,10 @@ import com.jstock.jstock.util.Response;
 public class OrderBookService {
   private List<OrderBook> orderBooks = new ArrayList<>();
   private final MessageSender messageSender;
+  private final EmiterService emiterService;
 
-  public OrderBookService(StockService stockService, MessageSender messageSender) {
+  public OrderBookService(StockService stockService, MessageSender messageSender, EmiterService emiterService) {
+    this.emiterService = emiterService;
     this.messageSender = messageSender;
     List<Stock> allStocks = stockService.getAllStocks();
     for (Stock stock : allStocks) {
@@ -31,14 +33,13 @@ public class OrderBookService {
     }
   }
 
-  public ResponseEntity<Response<OrderBook>> registerUserForGetOrderHistory(String symbol) {
+  public SseEmitter registerUserForGetOrderHistory(String symbol) {
     OrderBook foundOrderBook = orderBooks.stream().filter(o -> o.getSymbol().equals(symbol)).findFirst().orElse(null);
-    ;
     if (foundOrderBook == null) {
-      return Response.sendErrorResponse("Order book not found", 404);
+      return null;
     }
-    messageSender.send(Constant.UPDATE_SENT_QUEUE, symbol);
-    return Response.sendSuccessResponse("Order book found", foundOrderBook);
+    // messageSender.send(Constant.UPDATE_SENT_QUEUE, symbol);
+    return emiterService.addUserToSse(symbol);
 
   }
 

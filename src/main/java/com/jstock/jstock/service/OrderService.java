@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jstock.jstock.constants.Constant;
-import com.jstock.jstock.constants.Constant.OrderSide;
-import com.jstock.jstock.constants.Constant.OrderStatus;
-import com.jstock.jstock.constants.Constant.OrderType;
+import com.jstock.jstock.constants.Constant.*;
 import com.jstock.jstock.dto.order.*;
 import com.jstock.jstock.dto.user.UserBalanceDto;
 import com.jstock.jstock.entity.Order;
@@ -172,7 +170,6 @@ public class OrderService {
               userId,
               Double.valueOf(remainingQuantity),
               request.getPrice()));
-
         }
         // Send the order to the message queue
         try {
